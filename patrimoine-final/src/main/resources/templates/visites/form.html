@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${visite.id != null ? 'Modifier la visite' : 'Planifier une visite'}">Visite</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container" style="max-width:600px;">
+    <div class="card">
+        <h1 th:text="${visite.id != null ? 'Modifier la visite' : 'Planifier une visite'}">Visite</h1>
+
+        <form th:action="${visite.id != null ? '/visites/' + visite.id + '/modifier' : '/visites/nouvelle'}"
+              th:object="${visite}" method="post">
+
+            <label>Site</label>
+            <select th:field="*{site}" required>
+                <option th:each="s : ${sites}" th:value="${s.id}" th:text="${s.nom}"></option>
+            </select>
+
+            <label>Guide assigné</label>
+            <select th:field="*{guide}">
+                <option value="">-- Aucun guide --</option>
+                <option th:each="g : ${guides}" th:value="${g.id}" th:text="${g.nomComplet}"></option>
+            </select>
+
+            <label>Date et heure de début</label>
+            <input type="datetime-local" th:field="*{dateHeureDebut}" required>
+
+            <label>Durée (en minutes)</label>
+            <input type="number" min="15" step="15" th:field="*{duree}" placeholder="ex: 90" required>
+
+            <label>Capacité maximale (places)</label>
+            <input type="number" min="1" th:field="*{placesMax}" required>
+
+            <label>Description / thème de la visite</label>
+            <textarea th:field="*{description}"></textarea>
+
+            <button type="submit" class="btn" style="margin-top:16px;">Enregistrer</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

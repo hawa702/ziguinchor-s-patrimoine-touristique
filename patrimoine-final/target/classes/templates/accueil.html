@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ziguinchor - Patrimoine Touristique de Casamance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+    <img th:src="@{/images/ziguinchor-senegal-812566-1440x670.jpg}" alt="Vue de Ziguinchor, Casamance">
+    <div class="hero-scrim"></div>
+    <div class="hero-content">
+        <p class="eyebrow">Casamance · Sénégal</p>
+        <h1>Ziguinchor</h1>
+        <p class="hero-sub">Entre fleuve, mangroves et mémoire coloniale, la porte d'entrée de la Casamance se découvre au rythme de ses bolongs.</p>
+        <a th:href="@{/sites/recherche(ville='Ziguinchor')}" class="btn btn-hero">Explorer les sites</a>
+    </div>
+    <svg class="hero-wave" viewBox="0 0 1440 80" preserveAspectRatio="none">
+        <path d="M0,40 C240,80 480,0 720,30 C960,60 1200,10 1440,40 L1440,80 L0,80 Z"></path>
+    </svg>
+</div>
+
+<div class="container">
+
+    <!-- ===== Intro éditoriale ===== -->
+    <div class="intro">
+        <p>
+            <span class="drop-cap">Z</span>iguinchor est la capitale de la région du même nom et le chef-lieu
+            de la Casamance, au sud du Sénégal. Bâtie à l'embouchure du fleuve Casamance, la ville porte
+            encore les traces de son passé portugais puis français dans son architecture, tandis que ses
+            marchés colorés et ses bolongs environnants racontent une culture Diola vivante et hospitalière.
+            C'est le point de départ idéal pour explorer villages, forêts sacrées et traditions du sud du pays.
+        </p>
+    </div>
+
+    <!-- ===== À voir / à faire ===== -->
+    <h2 class="section-title">À voir, à faire</h2>
+    <div class="highlights">
+        <div class="highlight-card">
+            <img th:src="@{/images/ziguinchor-senegal-28-dec-2021-260nw-2364731207.webp}" alt="Le fleuve Casamance" class="highlight-img">
+            <div class="highlight-body">
+                <h3>Le fleuve Casamance</h3>
+                <p>Balades en pirogue dans les bolongs, pêche traditionnelle et mangroves à perte de vue.</p>
+            </div>
+        </div>
+        <div class="highlight-card">
+            <img th:src="@{/images/maison-coloniale-2.jpg}" alt="Architecture coloniale de Ziguinchor" class="highlight-img">
+            <div class="highlight-body">
+                <h3>Architecture coloniale</h3>
+                <p>Bâtiments portugais et français du centre-ville, témoins de l'histoire de la Casamance.</p>
+            </div>
+        </div>
+        <div class="highlight-card">
+            <img th:src="@{/images/Les-Dioulas.jpg}" alt="Culture Diola" class="highlight-img">
+            <div class="highlight-body">
+                <h3>Culture Diola</h3>
+                <p>Forêts sacrées, cases à impluvium et fêtes traditionnelles rythment la vie locale.</p>
+            </div>
+        </div>
+        <div class="highlight-card">
+            <img th:src="@{/images/28837779-28205372.jpg}" alt="Marché artisanal de Ziguinchor" class="highlight-img">
+            <div class="highlight-body">
+                <h3>Marchés artisanaux</h3>
+                <p>Tissage, poterie et vannerie : le marché Saint-Maur-des-Fossés regorge d'artisanat local.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Citation ===== -->
+    <div class="quote-block">
+        <p>« À Ziguinchor, le temps suit le rythme des marées. »</p>
+    </div>
+
+    <!-- ===== Galerie ===== -->
+    <h2 class="section-title">Ziguinchor en images</h2>
+    <div class="gallery">
+        <img th:src="@{/images/header1.jfif}" alt="Le fleuve Casamance à Ziguinchor">
+        <img th:src="@{/images/imagesss.jfif}" alt="Rue de Ziguinchor">
+        <img th:src="@{/images/femme-dos-bannane.jpg}" alt="Artisanat local à Ziguinchor">
+    </div>
+
+    <!-- ===== Infos pratiques ===== -->
+    <div class="info-strip">
+        <div class="info-item">
+            <span class="info-icon">☀️</span>
+            <h4>Meilleure saison</h4>
+            <p>Novembre à mai, saison sèche</p>
+        </div>
+        <div class="info-item">
+            <span class="info-icon">✈️</span>
+            <h4>Accès</h4>
+            <p>Aéroport de Ziguinchor, route ou bac depuis Dakar</p>
+        </div>
+        <div class="info-item">
+            <span class="info-icon">🗣️</span>
+            <h4>Langues</h4>
+            <p>Français, Diola, Wolof</p>
+        </div>
+    </div>
+
+    <!-- ===== Recherche ===== -->
+    <div class="card search-card">
+        <h2>Rechercher un site</h2>
+        <form th:action="@{/sites/recherche}" method="get">
+            <div style="display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap;">
+                <div style="flex:1; min-width:180px;">
+                    <label>Ville</label>
+                    <input type="text" name="ville" placeholder="ex: Ziguinchor">
+                </div>
+                <div style="flex:1; min-width:180px;">
+                    <label>Type</label>
+                    <select name="type">
+                        <option value="">Tous types</option>
+                        <option value="MONUMENT">Monument</option>
+                        <option value="PARC">Parc</option>
+                        <option value="MUSEE">Musée</option>
+                    </select>
+                </div>
+                <div><button type="submit" class="btn">Rechercher</button></div>
+            </div>
+        </form>
+    </div>
+
+    <!-- ===== Liste des sites ===== -->
+    <h2 class="section-title">Tous nos sites à découvrir</h2>
+    <div class="grid">
+        <div class="card" th:each="site : ${sites}">
+            <span class="badge" th:text="${site.type}">TYPE</span>
+            <h3><a th:href="@{'/sites/' + ${site.id}}" th:text="${site.nom}">Nom du site</a></h3>
+            <p th:text="${site.ville}">Ville</p>
+            <p class="stars" th:if="${site.nombreAvis > 0}">
+                ⭐ <span th:text="${site.noteMoyenne}">4.5</span>/5
+                (<span th:text="${site.nombreAvis}">10</span> avis)
+            </p>
+        </div>
+        <p th:if="${#lists.isEmpty(sites)}">Aucun site pour le moment.</p>
+    </div>
+
+</div>
+
+<footer class="site-footer">
+    <p>🏛️ Patrimoine Touristique · Ziguinchor, Casamance</p>
+</footer>
+
+</body>
+</html>

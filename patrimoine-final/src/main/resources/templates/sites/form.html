@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${site.id != null ? 'Modifier le site' : 'Nouveau site'}">Site</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container" style="max-width:600px;">
+    <div class="card">
+        <h1 th:text="${site.id != null ? 'Modifier le site' : 'Nouveau site'}">Site</h1>
+
+        <form th:action="${site.id != null ? '/sites/' + site.id + '/modifier' : '/sites/nouveau'}"
+              th:object="${site}" method="post">
+
+            <label>Nom du site</label>
+            <input type="text" th:field="*{nom}" required>
+            <span class="error" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></span>
+
+            <label>Description</label>
+            <textarea th:field="*{description}"></textarea>
+
+            <label>Type</label>
+            <select th:field="*{type}" required>
+                <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
+            </select>
+
+            <label>Ville</label>
+            <input type="text" th:field="*{ville}" required>
+            <span class="error" th:if="${#fields.hasErrors('ville')}" th:errors="*{ville}"></span>
+
+            <label>Adresse</label>
+            <input type="text" th:field="*{adresse}">
+
+            <div style="display:flex; gap:12px;">
+                <div style="flex:1;">
+                    <label>Latitude (GPS)</label>
+                    <input type="number" step="any" th:field="*{latitude}" placeholder="ex: 12.5833">
+                </div>
+                <div style="flex:1;">
+                    <label>Longitude (GPS)</label>
+                    <input type="number" step="any" th:field="*{longitude}" placeholder="ex: -16.2667">
+                </div>
+            </div>
+
+            <div style="display:flex; gap:12px;">
+                <div style="flex:2;">
+                    <label>Horaires d'ouverture</label>
+                    <input type="text" th:field="*{horaires}" placeholder="ex: Lun-Ven 9h-18h, Sam 9h-13h">
+                </div>
+                <div style="flex:1;">
+                    <label>Capacité d'accueil</label>
+                    <input type="number" min="1" th:field="*{capaciteAccueil}" placeholder="ex: 100">
+                </div>
+            </div>
+
+            <button type="submit" class="btn" style="margin-top:16px;">Enregistrer</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tableau de bord Conservateur</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container">
+    <h1>Tableau de bord — Conservateur</h1>
+
+    <div class="stat-grid">
+        <div class="stat-box"><div class="value" th:text="${nbSites}">0</div>Sites</div>
+        <div class="stat-box"><div class="value" th:text="${nbVisites}">0</div>Visites planifiées</div>
+        <div class="stat-box"><div class="value" th:text="${#lists.size(guidesEnAttente)}">0</div>Guides en attente</div>
+        <div class="stat-box"><div class="value" th:text="${#lists.size(signalements)}">0</div>Avis signalés</div>
+    </div>
+
+    <div class="card">
+        <h2>Actions rapides</h2>
+        <a th:href="@{/sites/nouveau}" class="btn">+ Ajouter un site</a>
+        <a th:href="@{/visites/nouvelle}" class="btn secondary">Planifier une visite</a>
+        <a th:href="@{/conservateur/guides}" class="btn secondary">Valider les guides</a>
+        <a th:href="@{/conservateur/moderation}" class="btn secondary">Modération des avis</a>
+    </div>
+
+    <div class="card" th:if="${#lists.size(guidesEnAttente) > 0}">
+        <h2>Guides en attente de validation</h2>
+        <ul>
+            <li th:each="g : ${guidesEnAttente}" th:text="${g.nomComplet} + ' (' + ${g.email} + ')'"></li>
+        </ul>
+        <a th:href="@{/conservateur/guides}" class="btn small">Gérer les validations</a>
+    </div>
+</div>
+</body>
+</html>

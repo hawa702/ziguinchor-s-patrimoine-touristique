@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Validation des guides</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container">
+    <h1>Comptes guides en attente de validation</h1>
+    <div class="card">
+        <table>
+            <tr><th>Nom</th><th>Email</th><th></th></tr>
+            <tr th:each="g : ${guides}">
+                <td th:text="${g.nomComplet}">Nom</td>
+                <td th:text="${g.email}">email</td>
+                <td>
+                    <form th:action="@{'/conservateur/guides/' + ${g.id} + '/valider'}" method="post" class="inline">
+                        <button type="submit" class="btn small">Valider</button>
+                    </form>
+                    <form th:action="@{'/conservateur/guides/' + ${g.id} + '/refuser'}" method="post" class="inline"
+                          onsubmit="return confirm('Refuser et supprimer ce compte ?');">
+                        <button type="submit" class="btn small danger">Refuser</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(guides)}"><td colspan="3">Aucun guide en attente.</td></tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon profil professionnel</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container" style="max-width:560px;">
+    <div class="card">
+        <h1>Mon profil professionnel</h1>
+        <p th:if="${succes}" class="alert success" th:text="${succes}"></p>
+
+        <form th:action="@{/guide/profil}" method="post">
+            <label>Nom complet</label>
+            <input type="text" th:value="${guide.nomComplet}" disabled>
+
+            <label>Email</label>
+            <input type="text" th:value="${guide.email}" disabled>
+
+            <label>Téléphone</label>
+            <input type="text" name="telephone" th:value="${guide.telephone}">
+
+            <label>Numéro de licence</label>
+            <input type="text" name="numeroLicence" th:value="${fiche.numeroLicence}">
+
+            <label>Spécialité</label>
+            <input type="text" name="specialite" th:value="${fiche.specialite}">
+
+            <label>Biographie</label>
+            <textarea name="biographie" th:text="${fiche.biographie}"></textarea>
+
+            <p th:if="${fiche.noteMoyenne > 0}" class="stars">
+                ⭐ Note moyenne : <span th:text="${#numbers.formatDecimal(fiche.noteMoyenne,1,1)}"></span>/5
+            </p>
+
+            <button type="submit" class="btn" style="margin-top:16px;">Enregistrer</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

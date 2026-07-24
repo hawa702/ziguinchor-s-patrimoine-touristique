@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tableau de bord Guide</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container">
+    <h1 th:text="'Bienvenue, ' + ${guide.nomComplet}">Bienvenue</h1>
+    <p class="stars" th:if="${fiche.noteMoyenne > 0}">⭐ Note moyenne : <span th:text="${#numbers.formatDecimal(fiche.noteMoyenne,1,1)}"></span>/5</p>
+    <p th:if="${!fiche.estVerifie}" class="alert error">Votre compte est en attente de validation par un administrateur.</p>
+
+    <div class="card">
+        <h2>Mon agenda du jour</h2>
+        <table>
+            <tr><th>Site</th><th>Heure</th><th>Places réservées</th></tr>
+            <tr th:each="v : ${agendaDuJour}">
+                <td th:text="${v.site.nom}">Site</td>
+                <td th:text="${#temporals.format(v.dateHeureDebut, 'HH:mm')}">10:00</td>
+                <td th:text="${v.placesMax - v.placesDisponibles} + '/' + ${v.placesMax}">3/10</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(agendaDuJour)}"><td colspan="3">Aucune visite prévue aujourd'hui.</td></tr>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>Mes prochaines visites</h2>
+        <table>
+            <tr><th>Site</th><th>Date</th><th>Heure</th></tr>
+            <tr th:each="v : ${prochainesVisites}">
+                <td th:text="${v.site.nom}">Site</td>
+                <td th:text="${#temporals.format(v.dateHeureDebut, 'dd/MM/yyyy')}">Date</td>
+                <td th:text="${#temporals.format(v.dateHeureDebut, 'HH:mm')}">Heure</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(prochainesVisites)}"><td colspan="3">Aucune visite planifiée.</td></tr>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>Mes avis reçus</h2>
+        <div th:each="a : ${avisListe}" style="border-top:1px solid #e1e6e3; padding:10px 0;">
+            <p class="stars" th:text="${'⭐'.repeat(a.note)}"></p>
+            <p th:text="${a.commentaire}"></p>
+            <p th:if="${a.reponse}" style="background:#f4f6f5; padding:8px; border-radius:6px;">
+                <strong>Votre réponse :</strong> <span th:text="${a.reponse}"></span>
+            </p>
+            <form th:if="${a.reponse == null}" th:action="@{'/avis/' + ${a.id} + '/repondre'}" method="post">
+                <textarea name="reponse" placeholder="Répondre à ce commentaire..." required></textarea>
+                <button type="submit" class="btn small" style="margin-top:6px;">Répondre</button>
+            </form>
+            <form th:action="@{'/avis/' + ${a.id} + '/signaler'}" method="post" style="margin-top:6px;">
+                <input type="text" name="motif" placeholder="Motif du signalement" style="width:200px; display:inline-block;" required>
+                <button type="submit" class="btn small danger">Signaler comme abusif</button>
+            </form>
+        </div>
+        <p th:if="${#lists.isEmpty(avisListe)}">Aucun avis reçu pour le moment.</p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmation de réservation</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container" style="max-width:520px;">
+    <div class="card">
+        <h1>🎫 Votre ticket de visite</h1>
+        <p><strong>Site :</strong> <span th:text="${reservation.visite.site.nom}"></span></p>
+        <p><strong>Date :</strong> <span th:text="${#temporals.format(reservation.visite.dateHeureDebut, 'dd/MM/yyyy HH:mm')}"></span></p>
+        <p><strong>Statut :</strong>
+            <span class="badge" th:if="${reservation.statut.name() == 'CONFIRME'}" th:text="${reservation.statut}"></span>
+            <span class="badge danger" th:if="${reservation.statut.name() == 'ANNULE'}" th:text="${reservation.statut}"></span>
+        </p>
+        <p><strong>Code ticket :</strong> <code th:text="${reservation.qrCodeHash}"></code></p>
+
+        <div class="qr-box">
+            <img th:src="'data:image/png;base64,' + ${qrCode}" alt="QR Code du ticket">
+            <p style="font-size:0.85rem; color:#607b73;">Présentez ce QR code à l'entrée du site.</p>
+        </div>
+
+        <form th:if="${reservation.statut.name() == 'CONFIRME'}" th:action="@{'/reservations/' + ${reservation.id} + '/annuler'}"
+              method="post" style="margin-top:8px;" onsubmit="return confirm('Annuler cette réservation ?');">
+            <button type="submit" class="btn danger" style="width:100%;">Annuler la réservation</button>
+        </form>
+
+        <a th:href="@{/reservations}" class="btn secondary" style="width:100%; text-align:center; margin-top:8px; display:block;">Retour à mes réservations</a>
+    </div>
+</div>
+</body>
+</html>

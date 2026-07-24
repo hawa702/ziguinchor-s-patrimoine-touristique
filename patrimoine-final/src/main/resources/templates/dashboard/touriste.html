@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon espace</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container">
+    <h1 th:text="'Bienvenue, ' + ${touriste.nomComplet}">Bienvenue</h1>
+
+    <div class="card">
+        <h2>Mes réservations récentes</h2>
+        <table>
+            <tr><th>Site</th><th>Date</th><th>Statut</th></tr>
+            <tr th:each="r : ${reservations}">
+                <td th:text="${r.visite.site.nom}">Site</td>
+                <td th:text="${#temporals.format(r.visite.dateHeureDebut, 'dd/MM/yyyy HH:mm')}">Date</td>
+                <td th:text="${r.statut}">Statut</td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(reservations)}"><td colspan="3">Aucune réservation pour le moment.</td></tr>
+        </table>
+        <a th:href="@{/reservations}" class="btn small" style="margin-top:10px;">Voir toutes mes réservations</a>
+    </div>
+
+    <div class="card">
+        <h2>Rechercher un site à proximité (GPS)</h2>
+        <form th:action="@{/sites/proximite}" method="get" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;">
+            <div><label>Latitude</label><input type="number" step="any" name="latitude" required></div>
+            <div><label>Longitude</label><input type="number" step="any" name="longitude" required></div>
+            <div><label>Rayon (km)</label><input type="number" name="rayon" value="10"></div>
+            <button type="submit" class="btn">Rechercher</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Sites à découvrir</h2>
+        <div class="grid">
+            <div class="card" th:each="s : ${sites}">
+                <span class="badge" th:text="${s.type}"></span>
+                <h3><a th:href="@{'/sites/' + ${s.id}}" th:text="${s.nom}"></a></h3>
+                <p th:text="${s.ville}"></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

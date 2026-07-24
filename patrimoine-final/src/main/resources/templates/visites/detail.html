@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Détail visite</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container">
+    <div class="card">
+        <h1 th:text="${visite.site.nom}">Site</h1>
+        <p><strong>Date :</strong> <span th:text="${#temporals.format(visite.dateHeureDebut, 'dd/MM/yyyy HH:mm')}"></span></p>
+        <p><strong>Durée :</strong> <span th:text="${visite.duree}"></span> minutes</p>
+        <p><strong>Guide :</strong> <span th:text="${visite.guide != null ? visite.guide.nomComplet : 'Non assigné'}"></span></p>
+        <p><strong>Places restantes :</strong> <span th:text="${visite.placesDisponibles}"></span> / <span th:text="${visite.placesMax}"></span></p>
+        <p th:text="${visite.description}"></p>
+
+        <form sec:authorize="hasRole('TOURIST')" th:action="@{'/reservations/visite/' + ${visite.id}}" method="post">
+            <button type="submit" class="btn" style="margin-top:10px;" th:disabled="${visite.placesDisponibles <= 0}">Réserver 1 place</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

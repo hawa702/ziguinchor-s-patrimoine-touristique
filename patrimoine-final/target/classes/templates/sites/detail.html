@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${site.nom}">Site</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+    <div class="card">
+        <span class="badge" th:text="${site.type}">TYPE</span>
+        <h1 th:text="${site.nom}">Nom du site</h1>
+        <p><strong>Ville :</strong> <span th:text="${site.ville}">Ville</span> —
+           <span th:text="${site.adresse}">Adresse</span></p>
+        <p th:text="${site.description}">Description</p>
+
+        <p th:if="${site.horaires != null}">
+            <strong>Horaires :</strong> <span th:text="${site.horaires}"></span>
+        </p>
+
+        <p th:if="${site.capaciteAccueil != null}">
+            <strong>Capacité d'accueil :</strong> <span th:text="${site.capaciteAccueil}"></span> personnes
+        </p>
+
+        <p th:if="${site.latitude != null}">
+            <strong>Coordonnées GPS :</strong>
+            <span th:text="${site.latitude}"></span>, <span th:text="${site.longitude}"></span>
+        </p>
+
+        <p class="stars" th:if="${site.nombreAvis > 0}">
+            ⭐ <span th:text="${site.noteMoyenne}">4.5</span>/5 (<span th:text="${site.nombreAvis}">0</span> avis)
+        </p>
+
+        <div sec:authorize="hasRole('ADMIN')" style="margin-top:14px;">
+            <a th:href="@{'/sites/' + ${site.id} + '/modifier'}" class="btn secondary small">Modifier</a>
+            <form th:action="@{'/sites/' + ${site.id} + '/supprimer'}" method="post" class="inline"
+                  onsubmit="return confirm('Supprimer ce site ?');">
+                <button type="submit" class="btn danger small">Supprimer</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Médias -->
+    <div class="card">
+        <h2>Photos / Vidéos</h2>
+        <div class="grid">
+            <div th:each="media : ${site.medias}">
+                <img th:if="${media.type.name() == 'IMAGE'}" th:src="@{${media.url}}"
+                     style="width:100%; border-radius:8px;">
+                <video th:if="${media.type.name() == 'VIDEO'}" th:src="@{${media.url}}"
+                       controls style="width:100%; border-radius:8px;"></video>
+            </div>
+        </div>
+        <form sec:authorize="hasRole('ADMIN')" th:action="@{'/sites/' + ${site.id} + '/medias'}"
+              method="post" enctype="multipart/form-data" style="margin-top:14px;">
+            <label>Ajouter un média</label>
+            <input type="file" name="fichier" required>
+            <select name="type" style="margin-top:8px;">
+                <option th:each="t : ${typesMedia}" th:value="${t}" th:text="${t}"></option>
+            </select>
+            <button type="submit" class="btn small" style="margin-top:8px;">Envoyer</button>
+        </form>
+    </div>
+
+    <!-- Visites planifiées -->
+    <div class="card">
+        <h2>Visites disponibles</h2>
+        <table>
+            <tr><th>Date et heure</th><th>Guide</th><th>Durée</th><th>Places restantes</th><th></th></tr>
+            <tr th:each="visite : ${visites}">
+                <td th:text="${#temporals.format(visite.dateHeureDebut, 'dd/MM/yyyy HH:mm')}">01/01/2026 10:00</td>
+                <td th:text="${visite.guide != null ? visite.guide.nomComplet : '—'}">Guide</td>
+                <td th:text="${visite.duree} + ' min'">60 min</td>
+                <td th:text="${visite.placesDisponibles}">5</td>
+                <td>
+                    <form sec:authorize="hasRole('TOURIST')" th:action="@{'/reservations/visite/' + ${visite.id}}"
+                          method="post" class="inline">
+                        <button type="submit" class="btn small" th:disabled="${visite.placesDisponibles <= 0}">
+                            Réserver
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(visites)}"><td colspan="5">Aucune visite planifiée pour ce site.</td></tr>
+        </table>
+    </div>
+
+    <!-- Avis -->
+    <div class="card">
+        <h2>Avis des visiteurs</h2>
+        <p sec:authorize="hasRole('TOURIST')" style="font-size:0.88rem; color:#607b73;">
+            Pour laisser un avis, rendez-vous dans <a th:href="@{/reservations}">Mes réservations</a> une fois votre visite terminée.
+        </p>
+
+        <div style="margin-top:18px;">
+            <div th:each="a : ${avisListe}" style="border-top:1px solid #e1e6e3; padding:10px 0;">
+                <p class="stars" th:text="${'⭐'.repeat(a.note)}">⭐⭐⭐⭐</p>
+                <p th:text="${a.commentaire}">Commentaire</p>
+                <p style="font-size:0.8rem; color:#607b73;" th:text="${a.reservation.touriste.nomComplet} + ' · ' + ${#temporals.format(a.datePublication, 'dd/MM/yyyy')}"></p>
+                <p th:if="${a.reponse}" style="background:#f4f6f5; padding:8px; border-radius:6px;">
+                    <strong>Réponse :</strong> <span th:text="${a.reponse}"></span>
+                </p>
+                <form sec:authorize="isAuthenticated()" th:action="@{'/avis/' + ${a.id} + '/signaler'}" method="post" class="inline">
+                    <input type="text" name="motif" placeholder="Motif du signalement" style="width:160px; display:inline-block;" required>
+                    <button type="submit" class="btn danger small">Signaler</button>
+                </form>
+            </div>
+            <p th:if="${#lists.isEmpty(avisListe)}">Aucun avis pour le moment.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

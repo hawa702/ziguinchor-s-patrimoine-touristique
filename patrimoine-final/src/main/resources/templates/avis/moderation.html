@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modération des avis</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container">
+    <h1>Avis signalés</h1>
+    <div class="card">
+        <div th:each="s : ${signalements}" style="border-top:1px solid #e1e6e3; padding:12px 0;">
+            <p><strong th:text="${s.avis.reservation.visite.site.nom}"></strong>
+               — guide : <span th:text="${s.avis.reservation.visite.guide != null ? s.avis.reservation.visite.guide.nomComplet : '—'}"></span></p>
+            <p class="stars" th:text="${'⭐'.repeat(s.avis.note)}"></p>
+            <p th:text="${s.avis.commentaire}"></p>
+            <p style="color:#9b1c1c;"><strong>Motif du signalement :</strong> <span th:text="${s.motif}"></span></p>
+            <form th:action="@{'/avis/' + ${s.avis.id} + '/supprimer'}" method="post" class="inline"
+                  onsubmit="return confirm('Supprimer définitivement cet avis ?');">
+                <button type="submit" class="btn small danger">Supprimer l'avis</button>
+            </form>
+            <form th:action="@{'/conservateur/moderation/' + ${s.id} + '/resoudre'}" method="post" class="inline">
+                <button type="submit" class="btn small secondary">Rejeter le signalement</button>
+            </form>
+        </div>
+        <p th:if="${#lists.isEmpty(signalements)}">Aucun avis signalé actuellement.</p>
+    </div>
+</div>
+</body>
+</html>

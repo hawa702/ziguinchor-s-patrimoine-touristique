@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription Guide</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container" style="max-width:480px;">
+    <div class="card">
+        <h1>Créer un compte guide</h1>
+        <p style="font-size:0.9rem; color:#607b73;">
+            Votre compte devra être validé par un conservateur avant votre première connexion.
+        </p>
+        <p th:if="${erreur}" class="alert error" th:text="${erreur}"></p>
+
+        <form th:action="@{/inscription/guide}" th:object="${user}" method="post">
+            <label>Prénom</label>
+            <input type="text" th:field="*{prenom}" required>
+            <span class="error" th:if="${#fields.hasErrors('prenom')}" th:errors="*{prenom}"></span>
+
+            <label>Nom</label>
+            <input type="text" th:field="*{nom}" required>
+            <span class="error" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></span>
+
+            <label>Email</label>
+            <input type="email" th:field="*{email}" required>
+            <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+
+            <label>Téléphone</label>
+            <input type="text" th:field="*{telephone}">
+
+            <p style="font-size:0.85rem; color:#607b73; margin-top:10px;">
+                Vous pourrez renseigner votre spécialité et votre biographie depuis votre profil, une fois votre compte validé.
+            </p>
+
+            <label>Mot de passe</label>
+            <input type="password" th:field="*{passwordHash}" required>
+            <span class="error" th:if="${#fields.hasErrors('passwordHash')}" th:errors="*{passwordHash}"></span>
+
+            <button type="submit" class="btn" style="margin-top:16px; width:100%;">S'inscrire</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

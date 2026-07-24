@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<nav th:fragment="navbar" class="navbar">
+    <div class="navbar-brand">
+        <a th:href="@{/accueil}">🏛️ Patrimoine Touristique</a>
+    </div>
+    <div class="navbar-links">
+        <a th:href="@{/sites}">Sites</a>
+
+        <span sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/conservateur/dashboard}">Tableau de bord</a>
+            <a th:href="@{/conservateur/guides}">Validation guides</a>
+            <a th:href="@{/visites/nouvelle}">Planifier visite</a>
+            <a th:href="@{/conservateur/moderation}">Modération</a>
+        </span>
+
+        <span sec:authorize="hasRole('GUIDE')">
+            <a th:href="@{/guide/dashboard}">Mon tableau de bord</a>
+            <a th:href="@{/guide/profil}">Mon profil</a>
+        </span>
+
+        <span sec:authorize="hasRole('TOURIST')">
+            <a th:href="@{/touriste/dashboard}">Mon espace</a>
+            <a th:href="@{/reservations}">Mes réservations</a>
+        </span>
+
+        <span sec:authorize="isAuthenticated()">
+            <form th:action="@{/logout}" method="post" class="logout-form">
+                <button type="submit" class="link-button">Déconnexion</button>
+            </form>
+        </span>
+
+        <span sec:authorize="!isAuthenticated()">
+            <a th:href="@{/login}">Connexion</a>
+            <a th:href="@{/inscription/touriste}">Inscription</a>
+        </span>
+    </div>
+</nav>
+</body>
+</html>

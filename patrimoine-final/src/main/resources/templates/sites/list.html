@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Sites - Patrimoine Touristique</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h1>Sites touristiques</h1>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/sites/nouveau}" class="btn">+ Ajouter un site</a>
+    </div>
+
+    <form th:action="@{/sites/recherche}" method="get" class="card">
+        <div style="display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap;">
+            <div style="flex:1; min-width:180px;">
+                <label>Ville</label>
+                <input type="text" name="ville" th:value="${villeRecherchee}">
+            </div>
+            <div style="flex:1; min-width:180px;">
+                <label>Type</label>
+                <select name="type">
+                    <option value="">Tous types</option>
+                    <option value="MONUMENT" th:selected="${typeRecherche != null and typeRecherche.name() == 'MONUMENT'}">Monument</option>
+                    <option value="PARC" th:selected="${typeRecherche != null and typeRecherche.name() == 'PARC'}">Parc</option>
+                    <option value="MUSEE" th:selected="${typeRecherche != null and typeRecherche.name() == 'MUSEE'}">Musée</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit" class="btn">Rechercher</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="grid">
+        <div class="card" th:each="site : ${sites}">
+            <span class="badge" th:text="${site.type}">TYPE</span>
+            <h3><a th:href="@{'/sites/' + ${site.id}}" th:text="${site.nom}">Nom du site</a></h3>
+            <p th:text="${site.ville}">Ville</p>
+            <p class="stars" th:if="${site.nombreAvis > 0}">
+                ⭐ <span th:text="${site.noteMoyenne}">4.5</span>/5
+                (<span th:text="${site.nombreAvis}">10</span> avis)
+            </p>
+            <a th:href="@{'/sites/' + ${site.id}}" class="btn small">Voir détails</a>
+        </div>
+        <p th:if="${#lists.isEmpty(sites)}">Aucun site trouvé.</p>
+    </div>
+</div>
+</body>
+</html>

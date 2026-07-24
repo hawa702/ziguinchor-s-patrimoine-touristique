@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container" style="max-width:420px;">
+    <div class="card">
+        <h1>Connexion</h1>
+
+        <p th:if="${succes}" class="alert success" th:text="${succes}"></p>
+        <p th:if="${param.error}" class="alert error">Email ou mot de passe incorrect (ou compte guide non encore validé).</p>
+        <p th:if="${param.logout}" class="alert success">Vous avez été déconnecté.</p>
+
+        <form th:action="@{/login}" method="post">
+            <label>Email</label>
+            <input type="email" name="username" required autofocus>
+
+            <label>Mot de passe</label>
+            <input type="password" name="password" required>
+
+            <button type="submit" class="btn" style="margin-top:16px; width:100%;">Se connecter</button>
+        </form>
+
+        <p style="margin-top:18px; font-size:0.9rem;">
+            Pas encore de compte ?
+            <a th:href="@{/inscription/touriste}">S'inscrire comme touriste</a> ·
+            <a th:href="@{/inscription/guide}">S'inscrire comme guide</a>
+        </p>
+
+        <div class="card" style="background:#f4f6f5; margin-top:20px; font-size:0.85rem;">
+            <strong>Comptes de démonstration</strong> (mot de passe : <code>password123</code>)
+            <ul>
+                <li>conservateur@patrimoine.sn</li>
+                <li>guide@patrimoine.sn</li>
+                <li>touriste@patrimoine.sn</li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

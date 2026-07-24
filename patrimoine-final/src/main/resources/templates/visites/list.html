@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Visites planifiées</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h1>Visites planifiées</h1>
+        <a sec:authorize="hasRole('ADMIN')" th:href="@{/visites/nouvelle}" class="btn">+ Planifier une visite</a>
+    </div>
+    <div class="card">
+        <table>
+            <tr><th>Site</th><th>Date</th><th>Durée</th><th>Guide</th><th>Places</th><th></th></tr>
+            <tr th:each="v : ${visites}">
+                <td th:text="${v.site.nom}">Site</td>
+                <td th:text="${#temporals.format(v.dateHeureDebut, 'dd/MM/yyyy HH:mm')}">2026-01-01</td>
+                <td th:text="${v.duree} + ' min'">60 min</td>
+                <td th:text="${v.guide != null ? v.guide.nomComplet : '—'}">Guide</td>
+                <td th:text="${v.placesDisponibles} + '/' + ${v.placesMax}">5/10</td>
+                <td>
+                    <a th:href="@{'/sites/' + ${v.site.id}}" class="btn small secondary">Voir le site</a>
+                    <span sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{'/visites/' + ${v.id} + '/modifier'}" class="btn small secondary">Modifier</a>
+                        <form th:action="@{'/visites/' + ${v.id} + '/supprimer'}" method="post" class="inline"
+                              onsubmit="return confirm('Supprimer cette visite ?');">
+                            <button type="submit" class="btn small danger">Supprimer</button>
+                        </form>
+                    </span>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(visites)}"><td colspan="6">Aucune visite planifiée.</td></tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>
